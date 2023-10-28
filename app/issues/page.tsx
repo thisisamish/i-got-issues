@@ -1,8 +1,6 @@
+import { CustomLink, IssueActions, IssueStatusBadge } from '@/app/components';
 import prisma from '@/prisma/client';
-import { Table, Link as RadixLink } from '@radix-ui/themes';
-import IssueStatusBadge from '../components/IssueStatusBadge';
-import IssueActions from '../components/IssueActions';
-import CustomLink from '../components/CustomLink';
+import { Table } from '@radix-ui/themes';
 
 export default async function IssuesPage() {
 	const issues = await prisma.issue.findMany();
