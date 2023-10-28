@@ -2,6 +2,8 @@ import { CustomLink, IssueActions, IssueStatusBadge } from '@/app/components';
 import prisma from '@/prisma/client';
 import { Table } from '@radix-ui/themes';
 
+export const dynamic = 'force-dynamic';
+
 export default async function IssuesPage() {
 	const issues = await prisma.issue.findMany();
 
