@@ -8,11 +8,11 @@ import DeleteIssueButton from './DeleteIssueButton';
 import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
 
-export default async function IssueDetailPage({
-	params,
-}: {
+type Props = {
 	params: { id: string };
-}) {
+};
+
+export default async function IssueDetailPage({ params }: Props) {
 	const session = await getServerSession(authOptions);
 
 	if (Number.isNaN(parseInt(params.id))) notFound();
@@ -41,4 +41,15 @@ export default async function IssueDetailPage({
 			)}
 		</Grid>
 	);
+}
+
+export async function generateMetadata({ params }: Props) {
+	const issue = await prisma.issue.findUnique({
+		where: { id: parseInt(params.id) },
+	});
+
+	return {
+		title: 'Issue ' + issue?.id + ' - ' + issue?.title,
+		description: 'Detais of issue ' + issue?.id,
+	};
 }

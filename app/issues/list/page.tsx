@@ -3,6 +3,7 @@ import prisma from '@/prisma/client';
 import { Status } from '@prisma/client';
 import IssueTable, { IssueQuery, columnNames } from './IssueTable';
 import { Flex } from '@radix-ui/themes';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
@@ -45,3 +46,8 @@ export default async function IssuesPage({
 		</Flex>
 	);
 }
+
+export const metadata: Metadata = {
+	title: 'I Got Issues - Issue List',
+	description: 'View all project issues',
+};
