@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import DeleteIssueButton from './DeleteIssueButton';
 import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 
 export default async function IssueDetailPage({
 	params,
