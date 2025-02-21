@@ -4,22 +4,20 @@ import { patchIssueSchema } from '@/app/lib/validationSchemas';
 import authOptions from '@/app/auth/authOptions';
 import { getServerSession } from 'next-auth';
 
-export async function PATCH(
-	request: NextRequest,
-	{ params }: { params: { id: string } }
-) {
-	const session = await getServerSession(authOptions);
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const session = await getServerSession(authOptions);
 
-	if (!session) return NextResponse.json({}, { status: 401 });
+    if (!session) return NextResponse.json({}, { status: 401 });
 
-	const body = await request.json();
-	const validation = patchIssueSchema.safeParse(body);
+    const body = await request.json();
+    const validation = patchIssueSchema.safeParse(body);
 
-	if (!validation.success)
+    if (!validation.success)
 		return NextResponse.json(validation.error.format(), { status: 400 });
 
-	const { assignedToUserId, title, description } = body;
-	if (assignedToUserId) {
+    const { assignedToUserId, title, description } = body;
+    if (assignedToUserId) {
 		const user = await prisma.user.findUnique({
 			where: {
 				id: assignedToUserId,
@@ -33,16 +31,16 @@ export async function PATCH(
 			);
 	}
 
-	const issue = await prisma.issue.findUnique({
+    const issue = await prisma.issue.findUnique({
 		where: {
 			id: parseInt(params.id),
 		},
 	});
 
-	if (!issue)
+    if (!issue)
 		return NextResponse.json({ error: 'Invalid issue' }, { status: 404 });
 
-	const updatedIssue = await prisma.issue.update({
+    const updatedIssue = await prisma.issue.update({
 		where: {
 			id: issue.id,
 		},
@@ -53,31 +51,29 @@ export async function PATCH(
 		},
 	});
 
-	return NextResponse.json(updatedIssue);
+    return NextResponse.json(updatedIssue);
 }
 
-export async function DELETE(
-	request: NextRequest,
-	{ params }: { params: { id: string } }
-) {
-	const session = await getServerSession(authOptions);
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    const session = await getServerSession(authOptions);
 
-	if (!session) return NextResponse.json({}, { status: 401 });
+    if (!session) return NextResponse.json({}, { status: 401 });
 
-	const issue = await prisma.issue.findUnique({
+    const issue = await prisma.issue.findUnique({
 		where: {
 			id: parseInt(params.id),
 		},
 	});
 
-	if (!issue)
+    if (!issue)
 		return NextResponse.json({ error: 'Invalid issue' }, { status: 404 });
 
-	await prisma.issue.delete({
+    await prisma.issue.delete({
 		where: {
 			id: issue.id,
 		},
 	});
 
-	return NextResponse.json({});
+    return NextResponse.json({});
 }

@@ -9,17 +9,18 @@ const IssueForm = dynamic(() => import('@/app/issues/_components/IssueForm'), {
 });
 
 type Props = {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 };
 
-export default async function EditIssuePage({ params }: Props) {
-	const issue = await prisma.issue.findUnique({
+export default async function EditIssuePage(props: Props) {
+    const params = await props.params;
+    const issue = await prisma.issue.findUnique({
 		where: {
 			id: parseInt(params.id),
 		},
 	});
 
-	if (!issue) notFound();
+    if (!issue) notFound();
 
-	return <IssueForm issue={issue} />;
+    return <IssueForm issue={issue} />;
 }

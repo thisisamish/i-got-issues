@@ -9,23 +9,24 @@ import EditIssueButton from './EditIssueButton';
 import IssueDetails from './IssueDetails';
 
 type Props = {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 };
 
-export default async function IssueDetailPage({ params }: Props) {
-	const session = await getServerSession(authOptions);
+export default async function IssueDetailPage(props: Props) {
+    const params = await props.params;
+    const session = await getServerSession(authOptions);
 
-	if (Number.isNaN(parseInt(params.id))) notFound();
+    if (Number.isNaN(parseInt(params.id))) notFound();
 
-	const issue = await prisma.issue.findUnique({
+    const issue = await prisma.issue.findUnique({
 		where: {
 			id: parseInt(params.id),
 		},
 	});
 
-	if (!issue) notFound();
+    if (!issue) notFound();
 
-	return (
+    return (
 		<Grid columns={{ initial: '1', sm: '5' }} gap="5">
 			<Box className="md:col-span-4">
 				<IssueDetails issue={issue} />
@@ -43,12 +44,13 @@ export default async function IssueDetailPage({ params }: Props) {
 	);
 }
 
-export async function generateMetadata({ params }: Props) {
-	const issue = await prisma.issue.findUnique({
+export async function generateMetadata(props: Props) {
+    const params = await props.params;
+    const issue = await prisma.issue.findUnique({
 		where: { id: parseInt(params.id) },
 	});
 
-	return {
+    return {
 		title: 'Issue ' + issue?.id + ' - ' + issue?.title,
 		description: 'Detais of issue ' + issue?.id,
 	};
