@@ -1,14 +1,14 @@
-"use client";
-
 import prisma from "@/prisma/client";
-import dynamic from "next/dynamic";
+// import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
-import IssueFormSkeleton from "./loading";
+// import "@/app/issues/_components/IssueForm";
+import IssueForm from "@/app/issues/_components/IssueForm";
+// import IssueFormSkeleton from "./loading";
 
-const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
-  ssr: false,
-  loading: () => <IssueFormSkeleton />,
-});
+// const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
+//   ssr: false,
+//   loading: () => <IssueFormSkeleton />,
+// });
 
 type Props = {
   params: Promise<{ id: string }>;
